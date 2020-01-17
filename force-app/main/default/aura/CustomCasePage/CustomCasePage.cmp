@@ -1,3 +1,33 @@
-<aura:component>
- <!--first commit-->
+<aura:component  implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction">
+ 
+
+   
+    <lightning:layout>
+        <lightning:layoutItem padding="horizontal-medium">                   
+            <lightning:input name="cpf" label="CPF" class="cpf" aura:id="auIdIdCpf" placeholder="Enter CPF" maxlength="14"/>
+        </lightning:layoutItem>        
+    </lightning:layout> 
+
+    <!--Insert orders here - table -->
+
+
+    <lightning:layout>
+        <lightning:layoutItem padding="horizontal-medium">
+            <lightning:select name="caseType" aura:id="auIdCaseType" label="How can we help you?" required="true">
+                <option value="">choose one option, please</option>
+                <option value="1">I have a complaint </option>
+                <option value="2">I have a suggestion</option>
+                <option value="3">I need help with an order</option>
+            </lightning:select>
+        </lightning:layoutItem>
+     
+
+    </lightning:layout>
+
+    <lightning:layout>
+        <lightning:layoutItem padding="horizontal-large">                   
+            <lightning:textArea name="description" label="Description" class="description" aura:id="auIdDescription" placeholder="Type your request here" maxlength="14"/>
+        </lightning:layoutItem>        
+    </lightning:layout> 
+
 </aura:component>	
