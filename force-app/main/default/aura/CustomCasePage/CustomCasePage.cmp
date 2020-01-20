@@ -2,14 +2,16 @@
     <div class="c-container">
         <lightning:layout class="x-large">
             <lightning:layoutItem flexibility="auto" padding="around-small" class="custom-box">
-                <lightning:input name="cpf" label="CPF" class="cpf" aura:id="auIdCpf" placeholder="Enter CPF" maxlength="14"/>         
+                <lightning:input name="cpf" label="CPF" class="cpf" aura:id="auIdCpf" placeholder="Enter CPF" maxlength="14"/> 
+                <lightning:textArea name="description" label="Description" class="description" aura:id="auIdDescription" placeholder="Type your request here" maxlength="256"/>        
+                
+            </lightning:layoutItem> 
+            <lightning:layoutItem flexibility="auto" padding="around-small" class="custom-box">                              
                 <ui:inputSelect label="How can we help you today?" class="inputSingle" aura:id="inputCaseType" >
                     <ui:inputSelectOption text="I have a complaint..."/>
                     <ui:inputSelectOption text="I have a suggestion..."/>
                     <ui:inputSelectOption text="I need help with an order..."/>
-                </ui:inputSelect>   
-            <lightning:layoutItem flexibility="auto" padding="around-small" class="custom-box"></lightning:layoutItem>                                
-                <lightning:textArea name="description" label="Description" class="description" aura:id="auIdDescription" placeholder="Type your request here" maxlength="256"/>
+                </ui:inputSelect>  
             </lightning:layoutItem>
         </lightning:layout>
     </div>
