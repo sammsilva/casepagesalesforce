@@ -1,18 +1,22 @@
-<aura:component  implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction"> 
-    <div class="c-container">
-        <lightning:layout class="x-large">
+<aura:component controller="GFT_CustomCaseController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction"> 
+   
+<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+<aura:attribute name="varCpf" type="String"/>
+
+<div class="c-container">
+        <lightning:layout>
             <lightning:layoutItem flexibility="auto" padding="around-small" class="custom-box">
-                <lightning:input name="cpf" label="CPF" class="cpf" aura:id="auIdCpf" placeholder="Enter CPF" maxlength="14"/> 
-                <lightning:textArea name="description" label="Description" class="description" aura:id="auIdDescription" placeholder="Type your request here" maxlength="256"/>        
-                
-            </lightning:layoutItem> 
-            <lightning:layoutItem flexibility="auto" padding="around-small" class="custom-box">                              
-                <ui:inputSelect label="How can we help you today?" class="inputSingle" aura:id="inputCaseType" >
-                    <ui:inputSelectOption text="I have a complaint..."/>
-                    <ui:inputSelectOption text="I have a suggestion..."/>
-                    <ui:inputSelectOption text="I need help with an order..."/>
+                <lightning:input name="cpf" label="CPF: " class="cpf" id="IdCpf" aura:id="auIdCpf" maxlength="11" value="{!v.varCpf}" onkeyup="{!c.handleCpf}"/>         
+                <lightning:input name="name" label="Nome Completo: " class="disabledInput" aura:id="auIdFullName" disabled="true"/>                
+                <ui:inputSelect label="Como podemos te ajudar hoje?" class="inputSingle" aura:id="inputCaseType">
+                    <ui:inputSelectOption text="Eu tenho uma reclamação..."/>
+                    <ui:inputSelectOption text="Eu gostaria de fazer uma sugestão..."/>
+                    <ui:inputSelectOption text="Eu preciso de ajuda com um pedido..."/>
                 </ui:inputSelect>  
+                <lightning:textArea name="description" label="Descrição:" class="description" aura:id="auIdDescription" placeholder="" maxlength="256"/>
             </lightning:layoutItem>
         </lightning:layout>
+        <lightning:button variant="brand" label="Cancelar" title="Brand action" onclick="{! c.handleClick }"/>
+        <lightning:button variant="brand" label="Enviar" title="Brand action" onclick="{! c.handleClick }"/>
     </div>
 </aura:component>	
