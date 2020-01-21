@@ -1,28 +1,60 @@
 ({    
-    handleCpf: function(cmp, event, helper) {      
-        let cpf = cmp.find("auIdCpf").get("v.value");           
-        let validRe = new RegExp("([0-9]{11})"); 
-        let invalidRe = new RegExp("(0{9}|1{9}|2{9}|3{9}|4{9}|5{9}|6{9}|7{9}|8{9}|9{9})");
-        let isValid = false;   
-        console.log("validRe = " + validRe.test(cpf));
-        console.log("InvalidRe =" + invalidRe.test(cpf));
+    handleCpf: function(cmp, event, helper) {   
+        let newCpf = cmp.find("auIdCpf").get("v.value");    
+        console.log("chamou handleCpf"); 
+        newCpf = this.removeMask(cmp,event,helper, newCpf);           
+        let validDigRe = new RegExp("([0-9]{11})"); 
+        let invalidDigRe = new RegExp("(0{9}|1{9}|2{9}|3{9}|4{9}|5{9}|6{9}|7{9}|8{9}|9{9})");
+        let isValid = false;  
+        if(validDigRe.test(newCpf) && !invalidDigRe.test(newCpf)) {           
+            isValid = this.validateCpf(cmp, event, helper,newCpf);                
+        } else  {
+           console.log("Digitos invalidos"); 
+        }        
 
-        if(validRe.test(cpf) && !invalidRe.test(cpf)) {
-            var maskedCpf = cpf.substring(0,3) + '.' + cpf.substring(3,6) +'.'+ cpf.substring(6,9)+'-'+ cpf.substring(9,11);     
-            cmp.set("v.varCpf", maskedCpf);               
-            isValid = this.validCpf(cmp, event, helper,cpf); 
-            console.log("CPF VALIDO AEEEEEEEEEEEEEEEEEEEEE");         
-        } else {
-            console.log("CPF INVALIDO");
+        if(isValid){            
+            var action = cmp.get("c.searchAccount");           
+            action.setParams({
+                cpf: newCpf
+            });
+            action.setCallback(this, function(data){      
+                console.log(data.getReturnValue());
+                if(data.getState() == "SUCCESS"){                   
+                    var result = data.getReturnValue(); 
+                    if(result['id']!=null){
+                        cmp.set("v.wasFound", true);                    
+                        cmp.set("v.varFullName", result['name']);
+                    } else {
+                        console.log("account not found");
+                    }                
+                } else {
+                    console.log("BAD REQUEST");
+                }                  
+            });
+            $A.enqueueAction(action);
         }
     },  
 
-    validCpf: function(cmp, event, helper, cpf) {              
+    handleCpfMask: function(cmp, event,helper){        
+        let newCpf = cmp.find("auIdCpf").get("v.value");               
+        switch(newCpf.length) {
+            case 3:
+                cmp.set("v.varCpf", newCpf.substring(0,3) + '.'); 
+                break;
+            case 7:
+                cmp.set("v.varCpf", newCpf.substring(0,8) + '.'); 
+                break;
+            case 11:    
+                cmp.set("v.varCpf", newCpf.substring(0,11) + '-');                 
+                break;
+        }
+    },
+
+    validateCpf: function(cmp, event, helper, cpf) {              
         let soma=0;
         let resto=0;
         let c=1;
         let dig=0;
-
 
         for(var i=10; i>=2;i--){       
             soma+= parseInt(cpf.substring(c-1,c) * i ); 
@@ -30,7 +62,9 @@
         }
 
         dig = parseInt(cpf.substring(9,10));
-        resto = (soma*10)%11;  
+        if(resto == 10) resto = 0;
+        resto = (soma*10)%11; 
+         
         if(resto==dig){
             c=1;
             soma =0 ;
@@ -39,12 +73,21 @@
                 c++;               
             }       
             resto = (soma*10)%11;
-            dig = parseInt(cpf.substring(10,11));          
-            if(resto ==dig)
+            dig = parseInt(cpf.substring(10,11)); 
+            if(resto == 10) resto = 0;      
+         
+            if(resto==dig)
                 return true;
             else 
                 return false;             
         }        
         return false;       
+    },
+
+    removeMask: function(cmp,event, helper, cpf){     
+        var newCpf = cpf; 
+        newCpf = cpf.split('.').join("");       
+        newCpf = newCpf.replace("-", "");        
+        return newCpf;
     }
 })

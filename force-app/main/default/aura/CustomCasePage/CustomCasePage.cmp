@@ -2,21 +2,28 @@
    
 <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
 <aura:attribute name="varCpf" type="String"/>
-
+<aura:attribute name="varFullName" type="String"/>
+<aura:attribute name="wasFound" type="boolean" default="false"/>
 <div class="c-container">
         <lightning:layout>
             <lightning:layoutItem flexibility="auto" padding="around-small" class="custom-box">
-                <lightning:input name="cpf" label="CPF: " class="cpf" id="IdCpf" aura:id="auIdCpf" maxlength="11" value="{!v.varCpf}" onkeyup="{!c.handleCpf}"/>         
-                <lightning:input name="name" label="Nome Completo: " class="disabledInput" aura:id="auIdFullName" disabled="true"/>                
-                <ui:inputSelect label="Como podemos te ajudar hoje?" class="inputSingle" aura:id="inputCaseType">
-                    <ui:inputSelectOption text="Eu tenho uma reclamação..."/>
-                    <ui:inputSelectOption text="Eu gostaria de fazer uma sugestão..."/>
-                    <ui:inputSelectOption text="Eu preciso de ajuda com um pedido..."/>
-                </ui:inputSelect>  
+                
+                <lightning:layoutItem>
+                    <lightning:input name="cpf" label="CPF: " class="cpf" id="IdCpf" aura:id="auIdCpf" maxlength="14" value="{!v.varCpf}" onkeyup="{!c.handleCpfMask}"/>         
+                    <lightning:button variant="brand" label="Buscar" title="Brand action" onclick="{!c.handleCpf}"/>
+                </lightning:layoutItem>   
+                                        
+                <aura:if isTrue="{!v.wasFound}">                
+                    <lightning:input name="name" label="Nome Completo: " class="disabledInput" value="{!v.varFullName}" aura:id="auIdFullName" disabled="true"/>                
+                    <ui:inputSelect label="Como podemos te ajudar hoje?" class="inputSingle" aura:id="inputCaseType">
+                        <ui:inputSelectOption text="Eu tenho uma reclamação..."/>
+                        <ui:inputSelectOption text="Eu gostaria de fazer uma sugestão..."/>
+                        <ui:inputSelectOption text="Eu preciso de ajuda com um pedido..."/>
+                    </ui:inputSelect>                  
                 <lightning:textArea name="description" label="Descrição:" class="description" aura:id="auIdDescription" placeholder="" maxlength="256"/>
+                </aura:if>
             </lightning:layoutItem>
         </lightning:layout>
-        <lightning:button variant="brand" label="Cancelar" title="Brand action" onclick="{! c.handleClick }"/>
-        <lightning:button variant="brand" label="Enviar" title="Brand action" onclick="{! c.handleClick }"/>
+        <lightning:button variant="brand" label="Cancelar" title="Brand action" onclick="{! c.handleClick }"/>     
     </div>
 </aura:component>	
