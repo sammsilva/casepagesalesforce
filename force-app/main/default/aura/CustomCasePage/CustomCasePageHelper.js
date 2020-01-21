@@ -1,33 +1,39 @@
 ({    
-    handleCpf: function(cmp, event, helper, cpf) {      
-        let newCpf = cpf;    
+    handleCpf: function(cmp, event, helper) {
+        let cpf = cmp.find("auIdCpf").get("v.value"); 
+        if(cpf.length<11)
+            return;        
+        //console.log("passou de 11");
+        let newCpf = this.removeMask(cmp, event, helper, cpf); 
+        //console.log("tirou qlq pontuacao");     
+        this.handleCpfFieldMask(cmp, event, helper,newCpf);
+        //console.log("colocou mask no field");
         let validDigRe = new RegExp("([0-9]{11})"); 
         let invalidDigRe = new RegExp("(0{9}|1{9}|2{9}|3{9}|4{9}|5{9}|6{9}|7{9}|8{9}|9{9})");
         let isValid = false;  
-        if(validDigRe.test(newCpf) && !invalidDigRe.test(newCpf)) {           
+        if(validDigRe.test(newCpf) && !invalidDigRe.test(newCpf)) {  
+            //console.log("INPUTS VALIDOS");        
             isValid = this.validateCpf(cmp, event, helper,newCpf);                
         } else  {
-           console.log("Digitos invalidos"); 
+           //console.log("INPUTS invalidos"); 
            cmp.set("v.wasFound", false);
         }       
+   
 
         if(isValid){            
             var action = cmp.get("c.searchAccount");           
             action.setParams({
                 cpf: newCpf
             });
-            action.setCallback(this, function(data){      
-                console.log(data.getReturnValue());
+            action.setCallback(this, function(data){     
                 if(data.getState() == "SUCCESS"){                   
-                    var result = data.getReturnValue(); 
-                    if(result['id']!=null){
-                        console.log("result is not null" + result['id']);
+                    var result = data.getReturnValue();                  
+                    if(result['id']!=null){                       
                         cmp.set("v.wasFound", true);                    
                         cmp.set("v.varFullName", result['name']);
-                    } else {
-                        console.log("Account not found");
+                    } else{                        
                         cmp.set("v.wasFound", false);     
-                    }              
+                    }           
                 } else {
                     console.log("BAD REQUEST");
                 }                  
@@ -36,18 +42,13 @@
         }
     },  
 
-    handleCpfMask: function(cmp, event,helper){      
-        console.log("chamou");
-        let newCpf = cmp.find("auIdCpf").get("v.value"); 
+    handleCpfFieldMask: function(cmp, event,helper, cpf){      
+        let newCpf = cpf; 
         let cpfHolder = newCpf.split(''); 
         if(newCpf.length==11){
             cmp.set("v.varCpf", cpfHolder[0] + cpfHolder[1] + cpfHolder[2] + '.' + cpfHolder[3] + 
                                 cpfHolder[4] + cpfHolder[5] + '.'+ cpfHolder[6] + cpfHolder[7] + cpfHolder[8] + '-' + 
-                                cpfHolder[9] + cpfHolder[10]); 
-            console.log("passou pro removemask");
-            newCpf = this.removeMask(cmp,event,helper, newCpf); 
-            console.log("passou pro handleCpf");   
-            this.handleCpf(cmp,event, helper, newCpf);          
+                                cpfHolder[9] + cpfHolder[10]);                   
         }        
     },
 
@@ -86,9 +87,19 @@
     },
 
     removeMask: function(cmp,event, helper, cpf){     
-        var newCpf = cpf; 
+        let newCpf = cpf; 
         newCpf = cpf.split('.').join("");       
         newCpf = newCpf.replace("-", "");            
         return newCpf;
+    },
+
+    submitCase: function(cmp,event, helper){     
+
+        let options = cmp.find("idInputCaseType").get("v.value");        
+        var newDescription = cmp.find("auIdDescription").get("v.value");
+        
+        console.log("INPUT SELECTED " + options);
+        console.log("DESCRIPTION " + newDescription);
+        
     }
 })
