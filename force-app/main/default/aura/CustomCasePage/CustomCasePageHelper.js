@@ -1,8 +1,6 @@
 ({    
-    handleCpf: function(cmp, event, helper) {   
-        let newCpf = cmp.find("auIdCpf").get("v.value");    
-        console.log("chamou handleCpf"); 
-        newCpf = this.removeMask(cmp,event,helper, newCpf);           
+    handleCpf: function(cmp, event, helper, cpf) {      
+        let newCpf = cpf;    
         let validDigRe = new RegExp("([0-9]{11})"); 
         let invalidDigRe = new RegExp("(0{9}|1{9}|2{9}|3{9}|4{9}|5{9}|6{9}|7{9}|8{9}|9{9})");
         let isValid = false;  
@@ -10,7 +8,8 @@
             isValid = this.validateCpf(cmp, event, helper,newCpf);                
         } else  {
            console.log("Digitos invalidos"); 
-        }        
+           cmp.set("v.wasFound", false);
+        }       
 
         if(isValid){            
             var action = cmp.get("c.searchAccount");           
@@ -22,11 +21,13 @@
                 if(data.getState() == "SUCCESS"){                   
                     var result = data.getReturnValue(); 
                     if(result['id']!=null){
+                        console.log("result is not null" + result['id']);
                         cmp.set("v.wasFound", true);                    
                         cmp.set("v.varFullName", result['name']);
                     } else {
-                        console.log("account not found");
-                    }                
+                        console.log("Account not found");
+                        cmp.set("v.wasFound", false);     
+                    }              
                 } else {
                     console.log("BAD REQUEST");
                 }                  
@@ -35,19 +36,19 @@
         }
     },  
 
-    handleCpfMask: function(cmp, event,helper){        
-        let newCpf = cmp.find("auIdCpf").get("v.value");               
-        switch(newCpf.length) {
-            case 3:
-                cmp.set("v.varCpf", newCpf.substring(0,3) + '.'); 
-                break;
-            case 7:
-                cmp.set("v.varCpf", newCpf.substring(0,8) + '.'); 
-                break;
-            case 11:    
-                cmp.set("v.varCpf", newCpf.substring(0,11) + '-');                 
-                break;
-        }
+    handleCpfMask: function(cmp, event,helper){      
+        console.log("chamou");
+        let newCpf = cmp.find("auIdCpf").get("v.value"); 
+        let cpfHolder = newCpf.split(''); 
+        if(newCpf.length==11){
+            cmp.set("v.varCpf", cpfHolder[0] + cpfHolder[1] + cpfHolder[2] + '.' + cpfHolder[3] + 
+                                cpfHolder[4] + cpfHolder[5] + '.'+ cpfHolder[6] + cpfHolder[7] + cpfHolder[8] + '-' + 
+                                cpfHolder[9] + cpfHolder[10]); 
+            console.log("passou pro removemask");
+            newCpf = this.removeMask(cmp,event,helper, newCpf); 
+            console.log("passou pro handleCpf");   
+            this.handleCpf(cmp,event, helper, newCpf);          
+        }        
     },
 
     validateCpf: function(cmp, event, helper, cpf) {              
@@ -87,7 +88,7 @@
     removeMask: function(cmp,event, helper, cpf){     
         var newCpf = cpf; 
         newCpf = cpf.split('.').join("");       
-        newCpf = newCpf.replace("-", "");        
+        newCpf = newCpf.replace("-", "");            
         return newCpf;
     }
 })
