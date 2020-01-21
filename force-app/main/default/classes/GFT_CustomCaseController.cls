@@ -7,7 +7,7 @@ public with sharing class GFT_CustomCaseController {
     }
 
     @AuraEnabled
-    public static void submitCase(){
-       
+    public static Object submitCase(String id, String selectedOption, String description){
+       return GFT_CustomCase.submitCase(id, selectedOption,description);
     }
 }

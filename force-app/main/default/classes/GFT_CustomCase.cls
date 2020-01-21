@@ -17,4 +17,22 @@ public with sharing class GFT_CustomCase {
         }
         return null;        
     }
+
+    @AuraEnabled
+    public static Object submitCase(String id, String selectedOption, String description){   
+        Case c = new Case();
+        try{
+            
+            c.Accountid = id;
+            c.Type = selectedOption;
+            c.Status = 'New';     
+            INSERT c;
+            return c;   
+        }   catch(Exception e){
+            System.debug(e.getMessage());
+        }  
+
+        return c;
+             
+    }
 }

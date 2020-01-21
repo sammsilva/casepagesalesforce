@@ -28,7 +28,8 @@
             action.setCallback(this, function(data){     
                 if(data.getState() == "SUCCESS"){                   
                     var result = data.getReturnValue();                  
-                    if(result['id']!=null){                       
+                    if(result['id']!=null){           
+                        cmp.set("v.accountId", result['id']);            
                         cmp.set("v.wasFound", true);                    
                         cmp.set("v.varFullName", result['name']);
                     } else{                        
@@ -95,11 +96,16 @@
 
     submitCase: function(cmp,event, helper){     
 
-        let options = cmp.find("idInputCaseType").get("v.value");        
-        var newDescription = cmp.find("auIdDescription").get("v.value");
+        let id = cmp.get("v.accountId");
+        let option = cmp.find("idInputCaseType").get("v.value");        
+        let newDescription = cmp.find("auIdDescription").get("v.value");
         
-        console.log("INPUT SELECTED " + options);
-        console.log("DESCRIPTION " + newDescription);
-        
+        let submitAction =   cmp.get("c.submitCase");
+
+        submitAction.setCallback(this, function(data){     
+            
+            console.log(data.getReturnValue());
+        });
+        $A.enqueueAction(submitAction);
     }
 })

@@ -4,6 +4,7 @@
 <aura:attribute name="varCpf" type="String"/>
 <aura:attribute name="varFullName" type="String"/>
 <aura:attribute name="wasFound" type="boolean" default="false"/>
+<aura:attribute name="accountId" type="String"/>
 <div class="c-container">
         <lightning:layout>
             <lightning:layoutItem flexibility="auto" padding="around-small" class="custom-box">              
