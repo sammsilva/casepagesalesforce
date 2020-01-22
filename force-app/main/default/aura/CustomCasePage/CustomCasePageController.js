@@ -13,5 +13,9 @@
 
     onSubmitCase: function(cmp, event, helper){
         helper.submitCase(cmp,event,helper);
+    },
+
+    onCancelClick:function (cmp, event, helper){
+        helper.clearFields(cmp, event, helper);
     }
 })

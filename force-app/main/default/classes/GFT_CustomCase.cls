@@ -1,9 +1,10 @@
 public with sharing class GFT_CustomCase {
-    private String cpf;
+    private String cpf;   
+
     public GFT_CustomCase(String newCpf) {
         this.cpf = newCpf;
-    }
-   
+    }    
+
     @AuraEnabled  
     public Object getAccount(){  
         Map<String,String> data = new Map<String,String>();     
@@ -15,19 +16,22 @@ public with sharing class GFT_CustomCase {
         } catch (Exception e ){           
             System.debug(e.getMessage() + 'Account not found');
         }
-        return null;        
+        return data;        
     }
 
     @AuraEnabled
-    public static Object submitCase(String id, String selectedOption, String description){   
+    public static Object submitCase(String id, String accountName, String selectedOption, String description){   
         Case c = new Case();
-        try{
-            
+        try{            
             c.Accountid = id;
+            System.debug(selectedOption);
             c.Type = selectedOption;
-            c.Status = 'New';     
+            c.Status = 'New';    
+            c.Subject = accountName + ' - ' + selectedOption; 
+            c.Description = description; 
+            c.Origin = 'Web';
             INSERT c;
-            return c;   
+            return c;  
         }   catch(Exception e){
             System.debug(e.getMessage());
         }  

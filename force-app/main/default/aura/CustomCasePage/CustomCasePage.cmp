@@ -1,26 +1,35 @@
 <aura:component controller="GFT_CustomCaseController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction"> 
 
 <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+<aura:attribute name="options" type="List" default="[
+                                                    {'label': 'Reclamação', 'value': 'reclamacao'},
+                                                    {'label': 'Dúvidas', 'value': 'duvida'},
+                                                    {'label': 'Sugestão', 'value': 'sugestao'},
+                                                    ]"/>
+
 <aura:attribute name="varCpf" type="String"/>
 <aura:attribute name="varFullName" type="String"/>
 <aura:attribute name="wasFound" type="boolean" default="false"/>
 <aura:attribute name="accountId" type="String"/>
-<div class="c-container">
-        <lightning:layout>
-            <lightning:layoutItem flexibility="auto" padding="around-small" class="custom-box">              
+
+<div class="slds-grid slds-wrap c-container">
+    <div class="slds-col slds-size_12-of-12">
+        <div style="padding-left: 3%; padding-bottom: 3%; padding-top: 1%;">
+            <lightning:layout>
+                <lightning:layoutItem >             
                 <lightning:input name="cpf" label="CPF: " class="cpf" id="IdCpf" aura:id="auIdCpf" maxlength="14" value="{!v.varCpf}" onkeyup="{!c.handleCpf}"/>         
-                <aura:if isTrue="{!v.wasFound}">                
-                    <lightning:input name="name" label="Nome Completo: " class="disabledInput" value="{!v.varFullName}" aura:id="auIdFullName" disabled="true"/>                
-                    <ui:inputSelect label="Como podemos te ajudar hoje?" class="inputSingle" aura:id="idInputCaseType">
-                        <ui:inputSelectOption text="Reclamação"/>                        
-                        <ui:inputSelectOption text="Dúvidas"/>
-                        <ui:inputSelectOption text="Sugestão"/>
-                    </ui:inputSelect>                  
-                    <lightning:textArea name="description" label="Descrição:" class="description" aura:id="auIdDescription" placeholder="" maxlength="256"/>
-                    <lightning:button variant="brand" label="Cancelar" title="Brand action" onclick="{! c.handleClick }"/>     
-                    <lightning:button variant="brand" label="Enviar" title="Brand action" onclick="{!c.onSubmitCase}"/>
-                </aura:if>
-            </lightning:layoutItem>
-        </lightning:layout>      
+                    <aura:if isTrue="{!v.wasFound}">                
+                        <lightning:input name="name" label="Nome Completo: " class="disabledInput" value="{!v.varFullName}" aura:id="auIdFullName" disabled="true"/>                
+                        <lightning:combobox name="options" aura:id="idInputCaseType" label="Como podemos te ajudar hoje?" value="reclamacao" options="{! v.options }"/>
+                        <lightning:textArea name="description" label="Descrição:" class="description" aura:id="auIdDescription" placeholder="Escreva aqui o seu problema..." maxlength="256"/>
+                        <lightning:button variant="destructive"  label="Cancelar" title="destructive action" onclick="{! c.onCancelClick }"/>     
+                        <lightning:button variant="brand"  label="Enviar" title="Brand action" onclick="{!c.onSubmitCase}"/>
+                    </aura:if>
+                </lightning:layoutItem >
+            </lightning:layout>
+        </div>
     </div>
-</aura:component>	
+
+  </div>
+     
+</aura:component>
